@@ -2,11 +2,6 @@
 // Props, emits, context, inject
 
 // Nuxt
-useHead({
-  htmlAttrs: {
-    'class': 'light',
-  },
-})
 
 // Constant
 
