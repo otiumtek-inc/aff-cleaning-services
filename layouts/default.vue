@@ -2,6 +2,11 @@
 // Props, emits, context, inject
 
 // Nuxt
+useHead({
+  htmlAttrs: {
+    'dark-theme': 'light',
+  },
+})
 
 // Constant
 
