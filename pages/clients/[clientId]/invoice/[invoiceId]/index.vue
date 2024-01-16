@@ -46,7 +46,7 @@ const print = () => {
 </script>
 
 <template>
-  <div class="flex mb-6 gap-3 p-3 justify-center print:hidden">
+  <div class="flex mb-3 gap-3 p-3 justify-center print:hidden border-b border-gray-400">
     <div @click="print" class="cursor-pointer" >Imprimir</div>
     <NuxtLink :to="`/clients/${route.params.clientId}`">Regresar</NuxtLink>
   </div>
