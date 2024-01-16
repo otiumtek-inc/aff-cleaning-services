@@ -4,7 +4,7 @@
 // Nuxt
 useHead({
   htmlAttrs: {
-    'dark-theme': 'light',
+    'class': 'light',
   },
 })
 
