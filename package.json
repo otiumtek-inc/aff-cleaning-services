@@ -17,6 +17,7 @@
   "dependencies": {
     "@nuxt/ui": "^2.12.0",
     "@nuxtjs/supabase": "^1.1.5",
+    "@vuepic/vue-datepicker": "^7.4.1",
     "dayjs": "^1.11.10",
     "dayjs-ext": "^2.2.0"
   }

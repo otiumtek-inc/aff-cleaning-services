@@ -23,5 +23,5 @@
 </script>
 
 <template>
-  <div>222</div>
+  <div>Comming soon</div>
 </template>

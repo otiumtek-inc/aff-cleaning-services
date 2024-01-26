@@ -57,15 +57,15 @@ const print = () => {
           <tbody>
             <tr>
               <td class="w-full align-top">
-                <div>
+                <div class="flex text-3xl items-center">
                   <img
-                    src="https://raw.githubusercontent.com/templid/email-templates/main/templid-dynamic-templates/invoice-02/brand-sample.png"
-                    class="h-12"
+                    src="/logo.svg"
+                    class="h-36"
                   />
                 </div>
               </td>
 
-              <td class="align-top">
+              <td class="align-middle">
                 <div class="text-sm">
                   <table class="border-collapse border-spacing-0">
                     <tbody>
@@ -94,7 +94,7 @@ const print = () => {
                             <p
                               class="whitespace-nowrap font-bold text-main text-right"
                             >
-                              {{data.data?.number}}
+                            {{data.data?.client.client_invoice_id}}-{{data.data?.number}}
                             </p>
                           </div>
                         </td>

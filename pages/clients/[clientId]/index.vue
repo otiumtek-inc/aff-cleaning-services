@@ -16,6 +16,7 @@ const columns = [
   { key: "number", label: "Número de factura" },
   { key: "created_at", label: "Fecha de creación" },
   { key: "amount", label: "Monto total" },
+  { key: "status", label: "Estado" },
   { key: "actions" },
 ];
 
@@ -55,6 +56,12 @@ const { data, pending, error, execute } = await useAsyncData(
 );
 
 // Computed from data call
+const invoices = computed(() => {
+  return data.value.data?.invoice?.slice().sort((a, b) => {
+    // Convierte las fechas a objetos Date y compáralos
+    return new Date(b.number) - new Date(a.number);
+  });
+});
 
 // Methods
 const getTotal = (lines) =>
@@ -69,16 +76,21 @@ const save = () => {
   execute();
 };
 
-const showFormAction = (id) => {
-  showForm.value = false
-  showForm.value = true
-  invoiceEdit.value = id
+const handlerRemoveItem = async (id) => {
+  await client.from('invoice').delete().match({ id })
+  execute()
 }
 
+const showFormAction = (id) => {
+  showForm.value = false;
+  showForm.value = true;
+  invoiceEdit.value = id;
+};
+
 const closeFormAction = (id) => {
-  showForm.value = false
-  invoiceEdit.value = null
-}
+  showForm.value = false;
+  invoiceEdit.value = null;
+};
 
 // Lifecycle
 
@@ -89,8 +101,9 @@ const closeFormAction = (id) => {
 
 <template>
   <div class="flex gap-20">
-    <div class="w-full md:w-1/2">
+    <div class="w-full md:w-7/12">
       <div class="mb-6">
+        <div><strong>Identificador: </strong> {{ data?.data.client_invoice_id }}</div>
         <div><strong>Nombre: </strong> {{ data?.data.name }}</div>
         <div><strong>Teléfono: </strong>{{ data?.data.phone }}</div>
         <div><strong>Correo electrónico: </strong>{{ data?.data.email }}</div>
@@ -108,11 +121,22 @@ const closeFormAction = (id) => {
         </div>
       </div>
       <UButton class="mb-4" @click="showFormAction()">Nueva factura</UButton>
-      <UTable :columns="columns" :rows="data?.data?.invoice">
+      <UTable :columns="columns" :rows="invoices">
         <template #id-data="{ row }">
-          <span class="p-1 rounded" :class="{'bg-green-500 text-white': invoiceEdit == row.id }">
+          <span
+            class="p-1 rounded"
+            :class="{ 'bg-green-500 text-white': invoiceEdit == row.id }"
+          >
             {{ row.id }}
           </span>
+        </template>
+        <template #number-data="{ row }">
+          <div class="font-bold text-center">{{ `${data?.data.client_invoice_id}-${row.number}` }}</div>
+        </template>
+        <template #status-data="{ row }">
+          <div v-if="row.status == 0" class="font-bold text-center text-gray-400">En edicion</div>
+          <div v-if="row.status == 1" class="font-bold text-center text-red-400">Pendiente</div>
+          <div v-if="row.status == 2" class="font-bold text-center text-green-400">Pagada</div>
         </template>
         <template #created_at-data="{ row }">
           <span>
@@ -133,8 +157,10 @@ const closeFormAction = (id) => {
         </template>
       </UTable>
     </div>
-    <div class="w-full md:w-1/2">
+    <div class="w-full md:w-5/12">
       <InvoiceForm
+        :nextInvoice="invoices?.length ? parseInt(invoices[0].number) + 1 : 1"
+        :idClient="data?.data.client_invoice_id"
         v-if="showForm"
         :invoiceEdit="invoiceEdit"
         @fire-save="save"

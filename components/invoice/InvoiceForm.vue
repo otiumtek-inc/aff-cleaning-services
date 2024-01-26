@@ -5,6 +5,12 @@ const props = defineProps({
   invoiceEdit: {
     type: Number,
   },
+  nextInvoice: {
+    type: Number,
+  },
+  idClient: {
+    type: String,
+  }
 });
 
 const emit = defineEmits(["fireSave", "fireCancel"]);
@@ -19,14 +25,26 @@ const route = useRoute();
 const client = useSupabaseClient();
 
 const state = reactive({
-  number: undefined,
+  number: props.nextInvoice,
   subject: undefined,
   created_at: undefined,
   due_date: undefined,
   po_number: undefined,
   notes: undefined,
+  status: 0,
   client_id: route.params.clientId,
 });
+
+const statusList = [{
+  name: 'En edicion',
+  value: 0
+}, {
+  name: 'Pendiente',
+  value: 1,
+}, {
+  name: 'Pagada',
+  value: 2
+}]
 
 const lines = ref([{ detail: "", qty: "", price: "" }]);
 
@@ -91,8 +109,8 @@ const loadInvoice = async () => {
       .single();
 
     const { invoice_line, ...rest } = data;
-
     state.number = rest.number;
+    state.status = rest.status;
     state.subject = rest.subject;
     state.po_number = rest.po_number;
     state.created_at = dayjs(rest.created_at).utc().format("YYYY-MM-DD");
@@ -133,17 +151,23 @@ watch(() => props.invoiceEdit, loadInvoice);
       class="space-y-4"
       @submit="onSubmit"
     >
-      <UFormGroup label="Número de factura" name="number">
-        <UInput v-model="state.number" />
+      <div class="flex items-end">
+        <div class="w-1/6 mb-2">{{ idClient }} - </div>
+        <UFormGroup label="Número de factura" name="number" class="w-full">
+          <UInput v-model="state.number" />
+        </UFormGroup>
+      </div>
+      <UFormGroup label="Estado" name="status">
+        <USelect v-model="state.status" :options="statusList" option-attribute="name" />
       </UFormGroup>
       <UFormGroup label="Asunto" name="subject">
         <UInput v-model="state.subject" />
       </UFormGroup>
       <UFormGroup label="Fecha de creación" name="created_at">
-        <UInput v-model="state.created_at" />
+        <vue-date-picker v-model="state.created_at" :enable-time-picker="false" format="yyyy-MM-dd" />
       </UFormGroup>
       <UFormGroup label="Fecha de vencimiento" name="due_date">
-        <UInput v-model="state.due_date" />
+        <vue-date-picker v-model="state.due_date" :enable-time-picker="false" format="yyyy-MM-dd" />
       </UFormGroup>
       <UFormGroup label="Número PO" name="po_number">
         <UInput v-model="state.po_number" />

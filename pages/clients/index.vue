@@ -13,11 +13,12 @@ const client = useSupabaseClient()
 
 const columns = [
   { key: "id", label: "Id" },
-  { key: "name", label: "Name" },
-  { key: "phone", label: "Phone" },
-  { key: "email", label: "Email" },
-  { key: "address", label: "Address" },
-  { key: "created_at", label: "Created at" },
+  { key: "client_invoice_id", label: "Identificador" },
+  { key: "name", label: "Nombre" },
+  { key: "phone", label: "Telefono" },
+  { key: "email", label: "Correo" },
+  { key: "address", label: "Direccion" },
+  { key: "created_at", label: "Fecha de creacion" },
   { key: "actions" },
 ];
 

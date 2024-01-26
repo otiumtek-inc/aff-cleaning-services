@@ -15,6 +15,7 @@ const state = reactive({
   address_street: undefined,
   address_county: undefined,
   created_at: undefined,
+  client_invoice_id: undefined,
 });
 
 const errorMessage = ref("");
@@ -31,6 +32,7 @@ const validate = (state) => {
   if (!state.name) errors.push({ path: "name", message: "Required" });
   if (!state.phone) errors.push({ path: "phone", message: "Required" });
   if (!state.email) errors.push({ path: "email", message: "Required" });
+  if (!state.client_invoice_id) errors.push({ path: "client_invoice_id", message: "Required" });
   if (!state.address_street)
     errors.push({ path: "address_street", message: "Required" });
   if (!state.address_county)
@@ -74,6 +76,9 @@ const onSubmit = async (event) => {
       class="space-y-4"
       @submit="onSubmit"
     >
+      <UFormGroup label="Identificador del cliente" name="client_invoice_id">
+        <UInput v-model="state.client_invoice_id" />
+      </UFormGroup>
       <UFormGroup label="Nombre" name="name">
         <UInput v-model="state.name" />
       </UFormGroup>
